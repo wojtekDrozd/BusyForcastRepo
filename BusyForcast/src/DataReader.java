@@ -11,46 +11,42 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-
 public class DataReader {
-	 public static void main(String[] args) {
-		 try {
-			 FileInputStream excelFile = new FileInputStream(new File("test_excel.xlsx"));
-			 Workbook wb = new XSSFWorkbook(excelFile);
-			 Sheet dataSheet = wb.getSheetAt(1);
-			 Cell currentCell = dataSheet.getRow(13).getCell(5);
-			 if (currentCell != null) {
-				 System.out.print(currentCell.getNumericCellValue()+" ");}
-			 else {
-				 System.out.println("empty cell");
-			 }
-			 System.out.println("check");
-			 // minor change
-			// System.out.println(value);
-			 /*
-			 FileInputStream excelFile = new FileInputStream(new File("test_excel.xlsx"));
-			 Workbook workbook = new XSSFWorkbook(excelFile);
-			 Sheet datatypeSheet = workbook.getSheetAt(1);
-			 Iterator<Row> iterator = datatypeSheet.iterator();
-			 
-			 while (iterator.hasNext()) {
-				 Row currentRow = iterator.next();
-				 Iterator<Cell> cellIterator= currentRow.iterator();
-				 while (cellIterator.hasNext()) {
-					 Cell currentCell = cellIterator.next();
-					 if (currentCell.getCellTypeEnum() == CellType.STRING) {
-						 System.out.print(currentCell.getStringCellValue()+" ");
-					 }
-					 else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-						 System.out.print(currentCell.getNumericCellValue()+" ");
-					 }
-				 }
-				 System.out.println();
-			 }*/
-		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
-		 } catch (IOException e) {
-			 e.printStackTrace();
-		 }
-	 }
+	
+	// musi czytać wszystkie pliki w katalogu których nazwa to tylko cyferki i po kolei je sprawdzac
+	// musi stworzyc tablice z zespolami i gradami która bedzie aktualizowana po przejsciu kazdego zespolu w kazdym arkuszu
+	public static void main(String[] args) {
+		try {
+			Sheet dataSheet = createDataSheet("240849.xlsx");
+			printTeamTable(43, 52, 5, 17, dataSheet);
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Sheet createDataSheet(String fileName) throws IOException {
+		FileInputStream excelFile = new FileInputStream(new File(fileName));
+		Workbook wb = new XSSFWorkbook(excelFile);
+		Sheet dataSheet = wb.getSheetAt(1);
+		return dataSheet;
+	}
+
+	public static void printTeamTable(int rowMin, int rowMax, int colMin, int colMax, Sheet dataSheet) {
+		Cell currentCell;
+		for (int i = rowMin; i < rowMax; i++) {
+			for (int j = colMin; j < colMax; j++) {
+				currentCell = dataSheet.getRow(i).getCell(j);
+				if (currentCell != null && currentCell.getCellTypeEnum() == CellType.NUMERIC) {
+					System.out.print(currentCell.getNumericCellValue() + " ");
+				} else {
+					System.out.print("0.0 ");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println("check");
+	}
 }
