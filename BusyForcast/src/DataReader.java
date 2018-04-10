@@ -24,6 +24,7 @@ public class DataReader {
 			 else {
 				 System.out.println("empty cell");
 			 }
+			 System.out.println("check");
 			 // minor change
 			// System.out.println(value);
 			 /*
