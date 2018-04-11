@@ -55,9 +55,9 @@ public class DataReader {
 			RoadTable = printTeamTable(173, 181, 5, 17, dataSheet);
 			AdminTable = printTeamTable(193, 202, 5, 17, dataSheet);
 			OtherTable = printTeamTable(209, 218, 5, 17, dataSheet);
-			updateDataTable(dataTable,StruTable,0); // nie dziala!
-			updateDataTable(dataTable,PMTable,1);
-			updateDataTable(dataTable,MechTable,2);
+			updateDataTable(dataTable,StruTable,0); 
+			updateDataTable(dataTable,PMTable,9);
+			updateDataTable(dataTable,MechTable,18);
 			
 			
 		//testowy wydruk tabeli z danymi
