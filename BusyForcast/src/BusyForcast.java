@@ -37,7 +37,7 @@ public class BusyForcast {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame("BusyForcast 0.0.1");
+		frame = new JFrame("BusyForcast 0.0.2");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -45,6 +45,8 @@ public class BusyForcast {
 		JButton btnNewButton = new JButton("Aktualizuj zajętość");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				DataUpdater updater = new DataUpdater();
+				DataUpdater.update();
 				JOptionPane.showMessageDialog(null, "Zajetość zaktualizowana");
 			}
 		});
