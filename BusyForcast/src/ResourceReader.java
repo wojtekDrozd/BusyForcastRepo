@@ -1,9 +1,11 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,13 +18,61 @@ public class ResourceReader {
 	 * bridge 
 	 * (bez pierwszej kolumny)
 	 */
-	int[][] resurceTable = new int[12][9];
 	
-	// nazwa pliku z zasobami
-	String fileName = "Lista.xlsx";
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		int[][] resurceTable = new int[12][9];
+		
+		// nazwa pliku z zasobami
+		String fileName = "Lista.xlsx";
+		try {
+			Sheet dataSheet = createDataSheet(fileName);
+			int i = 0;
+			Cell teamCell;
+			Cell gradeCell;
+			int grade;
+			for (Row row : dataSheet) {
+				
+				
+				teamCell = dataSheet.getRow(i).getCell(6);
+				System.out.print(teamCell.getStringCellValue() + "\n");
+				
+				// z tego trzeba zrobić metodę która będzie w argumencie przyjmowała obecny team
+				// i aktualizowała reasourceTable
+				if (teamCell.getStringCellValue().equals("Administration")) {
+					gradeCell = dataSheet.getRow(i).getCell(7);
+					System.out.print((int)gradeCell.getNumericCellValue() + "\n");
+					grade = (int) gradeCell.getNumericCellValue();
+					switch(grade) {
+					case 1: resurceTable[0][0] +=1;
+						break;
+					case 2: resurceTable[0][1] +=1;
+						break;
+					case 3: resurceTable[0][2] +=1;
+						break;
+					case 4: resurceTable[0][3] +=1;
+						break;
+					case 5: resurceTable[0][4] +=1;
+						break;
+					case 6: resurceTable[0][5] +=1;
+						break;
+					case 7: resurceTable[0][6] +=1;
+						break;
+					case 8: resurceTable[0][7] +=1;
+						break;
+					case 9: resurceTable[0][8] +=1;
+						break;
+					}
+				}
+				i+=1;
+			}
+			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 	
