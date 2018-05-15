@@ -11,63 +11,39 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ResourceReader {
-	
-	/* zasoby będą pakowane do tablicy o nastepujacej strukturze
-	 * team grd1 grd2 grd3 ... grd9
-	 * struct 0 	3    3		 1
-	 * bridge 
-	 * (bez pierwszej kolumny)
+
+	/*
+	 * zasoby będą pakowane do tablicy o nastepujacej strukturze team grd1 grd2 grd3
+	 * ... grd9 struct 0 3 3 1 bridge (bez pierwszej kolumny)
 	 */
-	
-	
-	public static void main(String[] args) {
-		int[][] resurceTable = new int[12][9];
+	double[][] resourceTable = new double[12][9];
+
+	// nazwa pliku z zasobami
+	String fileName = "Lista.xlsx";
+	public ResourceReader() {
 		
-		// nazwa pliku z zasobami
-		String fileName = "Lista.xlsx";
 		try {
 			Sheet dataSheet = createDataSheet(fileName);
 			int i = 0;
 			Cell teamCell;
-			Cell gradeCell;
-			int grade;
+
+			String teamName;
 			for (Row row : dataSheet) {
-				
-				
+
 				teamCell = dataSheet.getRow(i).getCell(6);
-				System.out.print(teamCell.getStringCellValue() + "\n");
-				
-				// z tego trzeba zrobić metodę która będzie w argumencie przyjmowała obecny team
-				// i aktualizowała reasourceTable
-				if (teamCell.getStringCellValue().equals("Administration")) {
-					gradeCell = dataSheet.getRow(i).getCell(7);
-					System.out.print((int)gradeCell.getNumericCellValue() + "\n");
-					grade = (int) gradeCell.getNumericCellValue();
-					switch(grade) {
-					case 1: resurceTable[0][0] +=1;
-						break;
-					case 2: resurceTable[0][1] +=1;
-						break;
-					case 3: resurceTable[0][2] +=1;
-						break;
-					case 4: resurceTable[0][3] +=1;
-						break;
-					case 5: resurceTable[0][4] +=1;
-						break;
-					case 6: resurceTable[0][5] +=1;
-						break;
-					case 7: resurceTable[0][6] +=1;
-						break;
-					case 8: resurceTable[0][7] +=1;
-						break;
-					case 9: resurceTable[0][8] +=1;
-						break;
-					}
+				//System.out.print(teamCell.getStringCellValue() + "\n");
+				teamName = teamCell.getStringCellValue();
+
+				// wyrzucenie wiersza nagłówka z analizy
+				if (i > 0) {
+					updateFromRow(teamName, dataSheet, i, resourceTable);
 				}
-				i+=1;
+				i += 1;
 			}
-			
-			
+			printResourceTable(resourceTable);
+			calculateDays(21,resourceTable);
+			printResourceTable(resourceTable);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -76,46 +52,124 @@ public class ResourceReader {
 
 	}
 	
-	// zwraca pierwszy arkusz z podanego excela
-		public static Sheet createDataSheet(String fileName) throws IOException {
-			FileInputStream excelFile = new FileInputStream(new File(fileName));
-			Workbook wb = new XSSFWorkbook(excelFile);
-			Sheet dataSheet = wb.getSheetAt(0);
-			return dataSheet;
+	public static void calculateDays(int daysForMonth, double[][]resourceTable) {
+		for (int i = 0; i<12;i++) {
+			for (int j = 0; j<9;j++) {
+				resourceTable[i][j] = resourceTable[i][j]*daysForMonth;
+			}
 		}
-
-		/*
-		// tworzy liste ilości gradów od 1 do 9 z danymi dla konkretnego team u na podstawie excela z danymi
-		public static double[][] createTeamTable(int rowMin, int rowMax, int colMin, int colMax, Sheet dataSheet) {
-			Cell currentCell = dataSheet.getRow(1).getCell(6);
-			int[] teamList = new int[9];
-			int countRow = 0;
-			int countCol = 0;
-			while (currentCell != null) {
-				
+	}
+	
+	public static void printResourceTable(double[][] resourceTable) {
+		for (int i = 0; i<12;i++) {
+			for (int j = 0; j<9;j++) {
+				System.out.print(resourceTable[i][j]+" ");
 			}
-			for (int i = rowMin; i < rowMax; i++) {
-				countCol = 0;
-				for (int j = colMin; j < colMax; j++) {
-					currentCell = dataSheet.getRow(i).getCell(j);
-					if (currentCell != null && currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-						// System.out.print(currentCell.getNumericCellValue() + " ");
-						teamTable[countRow][countCol] = currentCell.getNumericCellValue();
-					} else {
-						// System.out.print("0.0 ");
-						teamTable[countRow][countCol] = 0;
-					}
-					countCol += 1;
-				}
-				// System.out.println();
-				countRow += 1;
-			}
-			/*
-			 * System.out.println(); for (int i = 0; i < 9; i++) { for (int j = 0; j < 12;
-			 * j++) { System.out.print(teamTable[i][j] + " "); } System.out.println(); }
-			 
-			// System.out.println("check");
+			System.out.println();
+		}
+	}
+	
 
-			return teamTable;
-		}*/
+	// metoda przyjmuje team z wiersza, arkusz, numer wiersza i tabelę zasobów która aktualizuje
+	public static void updateFromRow(String teamName, Sheet dataSheet, int i, double[][] resourceTable) {
+		Cell gradeCell;
+		int grade;
+		int teamNumber;
+		gradeCell = dataSheet.getRow(i).getCell(7);
+		//System.out.print((int) gradeCell.getNumericCellValue() + "\n");
+		grade = (int) gradeCell.getNumericCellValue();
+		switch (teamName) {
+		case "Administration":
+			teamNumber = 11;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Bridges":
+			teamNumber = 9;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Electrical":
+			teamNumber = 4;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Environmental(inc Ecological Sustainable Design)":
+			teamNumber = 8;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Geotechnical":
+			teamNumber = 6;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Highways":
+			teamNumber = 10;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Management Consultancy":
+			teamNumber = 5;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Mechanical":
+			teamNumber = 2;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Project Management(inc Programme Management and Construction Admin)":
+			teamNumber = 1;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Public Health/Plumbing":
+			teamNumber = 3;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Structural":
+			teamNumber = 0;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+		case "Water":
+			teamNumber = 7;
+			switchOnGrade(grade,resourceTable,teamNumber);
+			break;
+			
+		}
+	}
+	
+	// metoda przyjmuje grade, tabele zasobow, i numer teamu i na tej podstawie aktualizuje table zasobow
+	public static void switchOnGrade(int grade, double[][] resourceTable, int teamNumber) {
+		switch (grade) {
+		case 1:
+			resourceTable[teamNumber][0] += 1;
+			break;
+		case 2:
+			resourceTable[teamNumber][1] += 1;
+			break;
+		case 3:
+			resourceTable[teamNumber][2] += 1;
+			break;
+		case 4:
+			resourceTable[teamNumber][3] += 1;
+			break;
+		case 5:
+			resourceTable[teamNumber][4] += 1;
+			break;
+		case 6:
+			resourceTable[teamNumber][5] += 1;
+			break;
+		case 7:
+			resourceTable[teamNumber][6] += 1;
+			break;
+		case 8:
+			resourceTable[teamNumber][7] += 1;
+			break;
+		case 9:
+			resourceTable[teamNumber][8] += 1;
+			break;
+		}
+	}
+
+	// zwraca pierwszy arkusz z podanego excela
+	public static Sheet createDataSheet(String fileName) throws IOException {
+		FileInputStream excelFile = new FileInputStream(new File(fileName));
+		Workbook wb = new XSSFWorkbook(excelFile);
+		Sheet dataSheet = wb.getSheetAt(0);
+		return dataSheet;
+	}
+
 }
