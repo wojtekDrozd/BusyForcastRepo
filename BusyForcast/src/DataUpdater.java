@@ -18,7 +18,7 @@ public class DataUpdater {
 	{
 		FileInputStream excelFile;
 		FileOutputStream excelOutFile;
-		DataReader reader = new DataReader();
+		DataReader2 reader = new DataReader2();
 		try {
 			excelFile = new FileInputStream(new File("test_wynik.xlsx"));
 			Workbook wb = new XSSFWorkbook(excelFile);
