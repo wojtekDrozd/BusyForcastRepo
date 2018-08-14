@@ -20,23 +20,23 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class DataReader {
 	// utworzenie tabel z danymi teamów
-	double[][] StruTable = new double[9][12];
-	double[][] PMTable = new double[9][12];
-	double[][] MechTable = new double[9][12];
-	double[][] PHTable = new double[9][12];
-	double[][] ElecTable = new double[9][12];
-	double[][] ConsTable = new double[9][12];
-	double[][] GeotTable = new double[9][12];
-	double[][] WaterTable = new double[9][12];
-	double[][] EnvTable = new double[9][12];
-	double[][] BridgeTable = new double[9][12];
-	double[][] RoadTable = new double[9][12];
-	double[][] AdminTable = new double[9][12];
-	double[][] OtherTable = new double[9][12];
+	static double[][] StruTable = new double[9][12];
+	static double[][] PMTable = new double[9][12];
+	static double[][] MechTable = new double[9][12];
+	static double[][] PHTable = new double[9][12];
+	static double[][] ElecTable = new double[9][12];
+	static double[][] ConsTable = new double[9][12];
+	static double[][] GeotTable = new double[9][12];
+	static double[][] WaterTable = new double[9][12];
+	static double[][] EnvTable = new double[9][12];
+	static double[][] BridgeTable = new double[9][12];
+	static double[][] RoadTable = new double[9][12];
+	static double[][] AdminTable = new double[9][12];
+	static double[][] OtherTable = new double[9][12];
 	// utworzenie docelowej tabeli z danymi
-	double[][] dataTable = new double[117][13];
+	static double[][] dataTable = new double[117][13];
 	
-	public DataReader() {
+	public static void main(String[] args) { //dla testów klasy musi być tak i zmienne static, docelowo dajemy tu konstruktor i ususwamy static
 
 		// dodanie ID do docelowej tabeli z danymi
 		for (int i = 0; i < dataTable.length; i++) {
