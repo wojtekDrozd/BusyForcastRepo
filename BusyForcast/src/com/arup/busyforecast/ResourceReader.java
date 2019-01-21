@@ -1,3 +1,4 @@
+package com.arup.busyforecast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ResourceReader {
 
 	/*
-	 * zasoby będą pakowane do tablicy o nastepujacej strukturze team grd1 grd2 grd3
+	 * zasoby beda pakowane do tablicy o nastepujacej strukturze team grd1 grd2 grd3
 	 * ... grd9 struct 0 3 3 1 bridge (bez pierwszej kolumny)
 	 */
 	double[][] resourceTable = new double[12][9];

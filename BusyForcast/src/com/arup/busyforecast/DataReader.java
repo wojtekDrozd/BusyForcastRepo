@@ -1,3 +1,4 @@
+package com.arup.busyforecast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,14 +13,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-//bez sensu skomplikowane sa poki co dwie tabele - może wymyslic cos innego
-
-//trzeba rozwiaząc problem z datami
-
-//musi zgłaszać problemy
 
 public class DataReader {
-	// utworzenie tabel z danymi teamów
+	// creating tables with teams data
 	static double[][] StruTable = new double[9][12];
 	static double[][] PMTable = new double[9][12];
 	static double[][] MechTable = new double[9][12];
@@ -33,17 +29,18 @@ public class DataReader {
 	static double[][] RoadTable = new double[9][12];
 	static double[][] AdminTable = new double[9][12];
 	static double[][] OtherTable = new double[9][12];
-	// utworzenie docelowej tabeli z danymi
+	//final table with data
 	static double[][] dataTable = new double[117][13];
 	
-	public static void main(String[] args) { //dla testów klasy musi być tak i zmienne static, docelowo dajemy tu konstruktor i ususwamy static
+	//main here for class testing
+	public static void main(String[] args) { 
 
-		// dodanie ID do docelowej tabeli z danymi
+		//adding ID for final table with data
 		for (int i = 0; i < dataTable.length; i++) {
 			dataTable[i][0] = i + 1;
 
 		}
-		// utworzenie listy plikow do analizy
+		// creating list of files for analysis
 		String fileName;
 		String[] nameParts;
 		List<String> projectList = new LinkedList<String>();
@@ -59,7 +56,7 @@ public class DataReader {
 				}
 			}
 		} else {
-			// co tu ma robić? wywalić jakiś błąd chyba..
+			// TODO
 		}
 
 		try {
@@ -93,7 +90,7 @@ public class DataReader {
 				updateDataTable(dataTable, OtherTable, 108);
 			}
 
-			// testowy wydruk tabeli z danymi
+			// Test print
 			for (int i = 0; i < 117; i++) {
 				for (int j = 0; j < 13; j++) {
 					System.out.print(dataTable[i][j] + " ");
@@ -108,7 +105,7 @@ public class DataReader {
 		}
 	}
 
-	// zwraca drugi arkusz z podanego excela
+	// return second sheet from workbook
 	public static Sheet createDataSheet(String fileName) throws IOException {
 		FileInputStream excelFile = new FileInputStream(new File(fileName));
 		Workbook wb = new XSSFWorkbook(excelFile);
@@ -116,8 +113,7 @@ public class DataReader {
 		return dataSheet;
 	}
 
-	// tworzy tabele z danymi dla konkretnego team u na podstawie zakresu komorek w
-	// excelu
+	// creates table for specific team based on work sheet data
 	public static double[][] createTeamTable(int rowMin, int rowMax, int colMin, int colMax, Sheet dataSheet) {
 		Cell currentCell;
 		double[][] teamTable = new double[9][12];
@@ -148,7 +144,7 @@ public class DataReader {
 		return teamTable;
 	}
 
-	// aktualizuje docelowa tabele z danymi w oparciu o dane teamow
+	// updates final data table based on team data
 	public static void updateDataTable(double[][] dataTable, double[][] teamTable, int startRow) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 12; j++) {
